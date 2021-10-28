@@ -1,8 +1,5 @@
 import React from 'react'
 import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import style from '../styles/style.scss'
 import { css } from '@emotion/react'
 import Link from 'next/link'
 
@@ -26,21 +23,15 @@ const styles = {
     font-weight: bold;
     text-align: center;
   `,
-  title: css`
-    text-align: center;
-    font-size: 4rem;
-    font-weight: bold;
-    line-height: 1.2;
-  `,
 };
 
 const Home: NextPage = () => {
   return (
     <div css={styles.container}>
-      <p css={styles.title}>Next<br />TypeScript<br />Rect Hook Form</p>
-      <Link href="/request/base" passHref>
-        <a css={styles.button}>Go React Form</a>
-      </Link>
+      request base
+      <Link href="/request/first" passHref>
+        <a css={styles.button}>request first</a>
+        </Link>
     </div>
   )
 }
