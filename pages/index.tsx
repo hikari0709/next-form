@@ -38,8 +38,8 @@ const Home: NextPage = () => {
   return (
     <div css={styles.container}>
       <p css={styles.title}>Next<br />TypeScript<br />Rect Hook Form</p>
-      <Link href="/request/base" passHref>
-        <a css={styles.button}>Go React Form</a>
+      <Link href="/request/year" passHref>
+        <a css={styles.button}>Select Year</a>
       </Link>
     </div>
   )

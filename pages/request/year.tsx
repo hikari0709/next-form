@@ -38,8 +38,12 @@ const styles = {
 };
 
 type formInputs = {
-  season: number;
+  year: string;
 };
+
+const date = new Date();
+const thisYear = date.getFullYear();
+const years = [thisYear+1, thisYear, thisYear-1, thisYear-2];
 
 const Home: NextPage = () => {
   const { register, handleSubmit } = useForm<formInputs>();
@@ -50,27 +54,19 @@ const Home: NextPage = () => {
 
   return (
     <div css={styles.container}>
-      <form onSubmit={handleSubmit(onSubmit)} action="/request/first">
-        <label htmlFor="spring" css={styles.label}>
-          <input id="spring" type="radio" value="1" defaultChecked {...register("season", { required: true })} />
-          春
-        </label>
-        <label htmlFor="summer" css={styles.label}>
-          <input id="summer" type="radio" value="2" {...register("season", { required: true })} />
-          夏
-        </label>
-        <label htmlFor="autumm" css={styles.label}>
-          <input id="autumm" type="radio" value="3" {...register("season", { required: true })} />
-          秋
-        </label>
-        <label htmlFor="winter" css={styles.label}>
-          <input id="winter" type="radio" value="4" {...register("season", { required: true })} />
-          冬
-        </label>
-        <input type="submit" />
+      <form onSubmit={handleSubmit(onSubmit)} action="/request/season">
+        {years.map(value => (
+          <label css={styles.label} key={value}>
+            <input type="radio" value={value} {...register("year", { required: true })} />
+            {value}
+          </label>
+        ))}
       </form>
+      <Link href="/request/season" passHref>
+        <a>request season</a>
+      </Link>
     </div>
-  );
+  )
 }
 
 export default Home
