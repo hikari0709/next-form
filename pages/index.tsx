@@ -38,7 +38,7 @@ const Home: NextPage = () => {
   return (
     <div css={styles.container}>
       <p css={styles.title}>Next<br />TypeScript<br />Rect Hook Form</p>
-      <Link href="/request/year" passHref>
+      <Link href="/request/all" passHref>
         <a css={styles.button}>Select Year</a>
       </Link>
     </div>
