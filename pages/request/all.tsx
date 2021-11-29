@@ -9,7 +9,6 @@ import Link from 'next/link'
 const styles = {
   container: css`
     width: 375px;
-    height: 90vh;
     margin: 20px auto 0;
     padding: 1.2rem;
     background-color: #fff;
@@ -96,10 +95,28 @@ const Home: NextPage = () => {
     product_companies: String;
   }
 
-  const { register, handleSubmit, watch } = useForm<formInputs>();
-  const [result, setResult] = useState<Response>();
+  const { register, handleSubmit, watch } = useForm();
+  const [result, setResult] = useState<Response[]>([]);
+
+  const convertSeason = (value: String) => {
+    switch (value) {
+      case '1':
+        return '春';
+        break;
+      case '2':
+        return '夏';
+        break;
+      case '3':
+        return '秋';
+        break;
+      case '4':
+        return '冬';
+        break;
+    }
+  }
 
   const onSubmit = (data: FormValues) => {
+    console.log(data);
     axios
       .get(`http://api.moemoe.tokyo/anime/v1/master/${data.year}/${data.season}`)
       .then(res => {
@@ -113,7 +130,6 @@ const Home: NextPage = () => {
             }
           })
         );
-        console.log(result);
       })
       .catch(err => alert(err));
   }
@@ -142,11 +158,14 @@ const Home: NextPage = () => {
           }
         </div>
         <button type="submit">
-          {watch('year', thisYear)}年{watch('season')}放送のアニメを調べる
+          {watch('year', thisYear)}年{convertSeason(watch('season'))}放送のアニメを調べる
         </button>
       </form>
-
-      {}
+      <ul>
+        {result.map((value, index) => (
+          <li key={index}>{value.title}</li>
+        ))}
+      </ul>
     </div>
   )
 }
