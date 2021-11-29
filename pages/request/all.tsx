@@ -74,19 +74,47 @@ const seasons = [
 ];
 
 const Home: NextPage = () => {
-  const { register, handleSubmit, watch } = useForm<formInputs>();
-  const [result, setResult] = useState('');
-
   type FormValues = {
-    year: number;
-    season: number;
+    year: Number;
+    season: Number;
   };
 
+  type Response = {
+    title_short2: String;
+    twitter_account: String;
+    public_url: String;
+    title_short1: String
+    sex: Number;
+    twitter_hash_tag: String;
+    id: Number;
+    sequel: Number;
+    created_at: String;
+    cours_id: Number;
+    title: String;
+    title_short3: String;
+    updated_at: String;
+    product_companies: String;
+  }
+
+  const { register, handleSubmit, watch } = useForm<formInputs>();
+  const [result, setResult] = useState<Response>();
+
   const onSubmit = (data: FormValues) => {
-    //setResult(JSON.stringify(data));
     axios
       .get(`http://api.moemoe.tokyo/anime/v1/master/${data.year}/${data.season}`)
-      .then(result => console.log(result))
+      .then(res => {
+        console.log(res);
+        setResult(
+          res.data.map((d: Response) => {
+            return {
+              url: d.public_url,
+              title: d.title,
+              company: d.product_companies,
+            }
+          })
+        );
+        console.log(result);
+      })
       .catch(err => alert(err));
   }
 
@@ -117,6 +145,8 @@ const Home: NextPage = () => {
           {watch('year', thisYear)}年{watch('season')}放送のアニメを調べる
         </button>
       </form>
+
+      {}
     </div>
   )
 }

@@ -39,7 +39,7 @@ const Home: NextPage = () => {
     <div css={styles.container}>
       <p css={styles.title}>Next<br />TypeScript<br />Rect Hook Form</p>
       <Link href="/request/all" passHref>
-        <a css={styles.button}>Select Year</a>
+        <a css={styles.button}>今やってるアニメを調べる</a>
       </Link>
     </div>
   )
