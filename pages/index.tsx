@@ -38,7 +38,7 @@ const Home: NextPage = () => {
   return (
     <div css={styles.container}>
       <p css={styles.title}>Next<br />TypeScript<br />Rect Hook Form</p>
-      <Link href="/request/all" passHref>
+      <Link href="/request/year" passHref>
         <a css={styles.button}>今やってるアニメを調べる</a>
       </Link>
     </div>
