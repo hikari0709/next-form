@@ -18,6 +18,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     year,
     updateYear,
   }
+
   return (
     <DataContext.Provider value={values}>
       <Component {...pageProps} />
