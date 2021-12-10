@@ -1,7 +1,7 @@
 import '../styles/globals.scss';
 import React, { useState } from 'react';
 import type { AppProps } from 'next/app';
-import { DataUserContext } from '../UserContext';
+import { DataContext } from '../UserContext';
 
 const date = new Date();
 const thisYear = date.getFullYear();
@@ -10,11 +10,18 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   const [year, setYear] = useState(thisYear);
 
-  console.log(pageProps);
+  const updateYear = (value: number): void => {
+    setYear(value);
+  }
+
+  const values = {
+    year,
+    updateYear,
+  }
   return (
-    <DataUserContext.Provider value="hello from context!!">
+    <DataContext.Provider value={values}>
       <Component {...pageProps} />
-    </DataUserContext.Provider>
+    </DataContext.Provider>
   );
 }
 export default MyApp

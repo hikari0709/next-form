@@ -1,3 +1,8 @@
-import {createContext} from 'react';
+import { createContext } from 'react';
 
-export const DataUserContext = createContext<string>("");
+type values = {
+  year: number;
+  setYear: number;
+};
+
+export const DataContext = createContext<values>();

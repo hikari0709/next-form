@@ -5,7 +5,7 @@ import type { NextPage } from 'next'
 import { css } from '@emotion/react'
 import Link from 'next/link'
 
-import { DataUserContext } from '../../UserContext';
+import { DataContext } from '../../UserContext';
 
 const styles = {
   container: css`
@@ -53,7 +53,7 @@ const years = [thisYear + 1, thisYear, thisYear - 1, thisYear - 2];
 
 const Home: NextPage = () => {
   const { register, handleSubmit } = useForm<formInputs>();
-  const msg = useContext(DataUserContext);
+  const msg = useContext(DataContext);
 
   const onSubmit = (data: any) => {
     alert(JSON.stringify(data));
