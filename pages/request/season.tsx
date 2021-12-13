@@ -1,9 +1,7 @@
-import React, { useState } from 'react'
-import { useForm } from "react-hook-form";
-
 import type { NextPage } from 'next'
 import { css } from '@emotion/react'
-import Link from 'next/link'
+import Link from 'next/link';
+import { useForm, useFormContext } from "react-hook-form";
 
 const styles = {
   container: css`
@@ -60,18 +58,11 @@ const seasons = [
   }
 ];
 
-type formInputs = {
-  season: {
-    text: string,
-    value: number,
-  }
-};
-
 const Home: NextPage = () => {
-  const { register, handleSubmit } = useForm<formInputs>();
+  const { register, handleSubmit } = useFormContext();
 
   const onSubmit = (data: any) => {
-    alert(JSON.stringify(data));
+    alert(JSON.stringify(register));
   }
 
   return (

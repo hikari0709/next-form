@@ -1,11 +1,8 @@
-import React, { useState, useContext } from 'react'
-import { useForm } from "react-hook-form";
+import { useForm, useFormContext } from "react-hook-form";
 
 import type { NextPage } from 'next'
 import { css } from '@emotion/react'
 import Link from 'next/link'
-
-import { DataContext } from '../../UserContext';
 
 const styles = {
   container: css`
@@ -39,31 +36,21 @@ const styles = {
   `,
 };
 
-type formInputs = {
-  year: number;
-  season: {
-    text: string,
-    value: number,
-  }
-};
-
 const date = new Date();
 const thisYear = date.getFullYear();
 const years = [thisYear + 1, thisYear, thisYear - 1, thisYear - 2];
 
 const Home: NextPage = () => {
-  const { register, handleSubmit } = useForm<formInputs>();
-  const msg = useContext(DataContext);
+  const { register } = useFormContext();
 
   const onSubmit = (data: any) => {
     alert(JSON.stringify(data));
-
   }
 
   return (
     <div css={styles.container}>
-      {msg}
-      <form onSubmit={handleSubmit(onSubmit)}>
+      {register}
+      <form>
         {years.map(value => (
           <label css={styles.label} key={value}>
             <input type="radio" value={value} {...register("year", { required: true })} />

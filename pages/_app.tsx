@@ -1,28 +1,29 @@
 import '../styles/globals.scss';
-import React, { useState } from 'react';
 import type { AppProps } from 'next/app';
-import { DataContext } from '../UserContext';
+import { useForm, FormProvider } from "react-hook-form";
 
 const date = new Date();
 const thisYear = date.getFullYear();
 
-function MyApp({ Component, pageProps }: AppProps) {
+export type FormType = {
+  year: number;
+  season: number;
+};
 
-  const [year, setYear] = useState(thisYear);
 
-  const updateYear = (value: number): void => {
-    setYear(value);
-  }
+const MyApp = ({ Component, pageProps }: AppProps) => {
 
-  const values = {
-    year,
-    updateYear,
-  }
+  const methods = useForm<FormType>({
+    defaultValues: {
+      year: thisYear,
+      season: 1,
+    },
+  });
 
   return (
-    <DataContext.Provider value={values}>
+    <FormProvider {...methods}>
       <Component {...pageProps} />
-    </DataContext.Provider>
+    </FormProvider>
   );
 }
 export default MyApp
