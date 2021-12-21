@@ -1,7 +1,6 @@
-import React, { useState, FC } from 'react'
+import React from 'react'
 import Router from 'next/router'
 import { useForm, useFormContext } from "react-hook-form";
-import axios from "axios";
 
 import type { NextPage } from 'next'
 import { css } from '@emotion/react'

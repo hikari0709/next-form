@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { useForm, useFormContext } from "react-hook-form";
 import axios from "axios";
 
 import type { NextPage } from 'next'
@@ -59,12 +58,11 @@ type Props = {
   season: number;
 }
 
-
 const Home: NextPage<Props> = ({
   year,
   season,
 }) => {
-  const { register } = useFormContext();
+
   const [result, setResult] = useState<Response[]>([]);
 
   useEffect(() => {
