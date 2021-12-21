@@ -41,7 +41,7 @@ const thisYear = date.getFullYear();
 const years = [thisYear + 1, thisYear, thisYear - 1, thisYear - 2];
 
 const Home: NextPage = () => {
-  const { register } = useFormContext();
+  const { register, handleSubmit } = useFormContext();
 
   const onSubmit = (data: any) => {
     alert(JSON.stringify(data));
@@ -49,8 +49,7 @@ const Home: NextPage = () => {
 
   return (
     <div css={styles.container}>
-      {register}
-      <form>
+      <form onSubmit={handleSubmit(onSubmit)}>
         {years.map(value => (
           <label css={styles.label} key={value}>
             <input type="radio" value={value} {...register("year", { required: true })} />

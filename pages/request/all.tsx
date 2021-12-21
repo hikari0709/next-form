@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
-import { useForm } from "react-hook-form";
+import React, { useState, FC } from 'react'
+import Router from 'next/router'
+import { useForm, useFormContext } from "react-hook-form";
 import axios from "axios";
 
 import type { NextPage } from 'next'
 import { css } from '@emotion/react'
-import Link from 'next/link'
 
 const styles = {
   container: css`
@@ -37,14 +37,6 @@ const styles = {
   `,
 };
 
-type formInputs = {
-  year: number;
-  season: {
-    text: string,
-    value: number,
-  }
-};
-
 const date = new Date();
 const thisYear = date.getFullYear();
 const years = [thisYear + 1, thisYear, thisYear - 1, thisYear - 2];
@@ -72,31 +64,22 @@ const seasons = [
   }
 ];
 
-const Home: NextPage = () => {
+type Props = {
+  setYear: (value: number) => void;
+  setSeason: (value: number) => void;
+}
+
+const Home: NextPage<Props> = ({
+  setYear,
+  setSeason,
+  }) => {
   type FormValues = {
     year: Number;
     season: Number;
   };
 
-  type Response = {
-    title_short2: String;
-    twitter_account: String;
-    public_url: String;
-    title_short1: String
-    sex: Number;
-    twitter_hash_tag: String;
-    id: Number;
-    sequel: Number;
-    created_at: String;
-    cours_id: Number;
-    title: String;
-    title_short3: String;
-    updated_at: String;
-    product_companies: String;
-  }
-
   const { register, handleSubmit, watch } = useForm();
-  const [result, setResult] = useState<Response[]>([]);
+  const methods = useFormContext();
 
   const convertSeason = (value: String) => {
     switch (value) {
@@ -115,28 +98,20 @@ const Home: NextPage = () => {
     }
   }
 
-  const onSubmit = (data: FormValues) => {
-    console.log(data);
-    axios
-      .get(`http://api.moemoe.tokyo/anime/v1/master/${data.year}/${data.season}`)
-      .then(res => {
-        console.log(res);
-        setResult(
-          res.data.map((d: Response) => {
-            return {
-              url: d.public_url,
-              title: d.title,
-              company: d.product_companies,
-            }
-          })
-        );
-      })
-      .catch(err => alert(err));
+  const onSubmit = handleSubmit(
+    (data) => {
+      setYear(data.year);
+      setSeason(data.season);
+    }
+  );
+
+  const moveResultPage = () => {
+    Router.push('/request/result');
   }
 
   return (
     <div css={styles.container}>
-      <form onSubmit={handleSubmit(onSubmit)} action="#">
+      <form onSubmit={onSubmit} action="#">
         <div css={styles.margin}>
           {
             years.map(value => (
@@ -157,15 +132,10 @@ const Home: NextPage = () => {
             ))
           }
         </div>
-        <button type="submit">
-          {watch('year', thisYear)}年{convertSeason(watch('season'))}放送のアニメを調べる
+        <button type="submit" onClick={moveResultPage}>
+          {watch('year', thisYear)}年{convertSeason(watch('season', '1'))}放送のアニメを調べる
         </button>
       </form>
-      <ul>
-        {result.map((value, index) => (
-          <li key={index}>{value.title}</li>
-        ))}
-      </ul>
     </div>
   )
 }
