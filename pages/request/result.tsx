@@ -34,6 +34,10 @@ const styles = {
   margin: css`
     margin-bottom: 16px;
   `,
+  list: css`
+    height: 100%;
+    overflow: scroll;
+  `,
 };
 
 type Response = {
@@ -84,7 +88,7 @@ const Home: NextPage<Props> = ({
 
   return (
     <div css={styles.container}>
-      <ul>
+      <ul css={ styles.list }>
         {result.map((value, index) => (
           <li key={index}>{value.title}</li>
         ))}
