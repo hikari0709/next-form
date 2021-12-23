@@ -2,39 +2,10 @@ import React from 'react'
 import Router from 'next/router'
 import { useForm, useFormContext, FormProvider } from "react-hook-form";
 
-import type { NextPage } from 'next'
-import { css } from '@emotion/react'
+import Year from "../../components/request/InputYear";
 
-const styles = {
-  container: css`
-    width: 375px;
-    margin: 20px auto 0;
-    padding: 1.2rem;
-    background-color: #fff;
-  `,
-  button: css`
-    display: block;
-    width: 80%;
-    margin: 0 auto;
-    padding: 10px;
-    background-color: #00a022;
-    border-radius: 2px;
-    color: #fff;
-    font-size: 2rem;
-    font-weight: bold;
-    text-align: center;
-  `,
-  label: css`
-    display: block;
-    padding: 8px;
-    border-radius: 3px;
-    border: 1px solid #ccc;
-    cursor: pointer;
-  `,
-  margin: css`
-    margin-bottom: 16px;
-  `,
-};
+import type { NextPage } from 'next';
+import { css } from '@emotion/react';
 
 const setDefaultSeason = (month: number) => {
   switch (month) {
@@ -102,6 +73,37 @@ export type FormType = {
   seasons: Array<object>;
 };
 
+const styles = {
+  container: css`
+    width: 375px;
+    margin: 20px auto 0;
+    padding: 1.2rem;
+    background-color: #fff;
+  `,
+  button: css`
+    display: block;
+    width: 80%;
+    margin: 0 auto;
+    padding: 10px;
+    background-color: #00a022;
+    border-radius: 2px;
+    color: #fff;
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+  `,
+  label: css`
+    display: block;
+    padding: 8px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+  `,
+  margin: css`
+    margin-bottom: 16px;
+  `,
+};
+
 const Home: NextPage<Props> = ({
   setYear,
   setSeason,
@@ -133,8 +135,9 @@ const Home: NextPage<Props> = ({
     }
   }
 
-  const onSubmit = handleSubmit(
+  const onSubmit = methods.handleSubmit(
     (data) => {
+      console.log(data);
       setYear(data.year);
       setSeason(data.season);
     }
@@ -144,12 +147,14 @@ const Home: NextPage<Props> = ({
     Router.push('/request/result');
   }
 
+  const label = styles.label;
+
   return (
     <div css={styles.container}>
       <FormProvider {...methods}>
         <form onSubmit={onSubmit} action="#">
           <div css={styles.margin}>
-            <Year />
+            <Year years={years} thisYear={thisYear} style={label}/>
           </div>
           <Season />
           <button type="submit" onClick={moveResultPage}>
@@ -161,25 +166,8 @@ const Home: NextPage<Props> = ({
   )
 }
 
-const Year = () => {
-  const { register } = useFormContext();
-  return (
-    <>
-      {
-        years.map(value => (
-          <label css={styles.label} key={value}>
-            <input type="radio" value={value} {...register("year", { required: true })} checked={value === thisYear} />{value}
-          </label>
-        ))
-      }
-    </>
-  );
-}
-
 const Season = () => {
   const { register } = useFormContext();
-  const thisSeason = { ...register('season') };
-  console.log(thisSeason);
   return (
     <>
       {
