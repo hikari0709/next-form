@@ -1,6 +1,6 @@
 import React from 'react'
 import { useFormContext } from "react-hook-form";
-import { SerializedStyles, css } from '@emotion/react';
+import { SerializedStyles } from '@emotion/react';
 
 type Props = {
   years: Array<number>;

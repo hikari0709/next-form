@@ -1,8 +1,9 @@
 import React from 'react'
 import Router from 'next/router'
-import { useForm, useFormContext, FormProvider } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 
 import Year from "../../components/request/InputYear";
+import Season from "../../components/request/InputSeason";
 
 import type { NextPage } from 'next';
 import { css } from '@emotion/react';
@@ -61,6 +62,12 @@ const seasons = [
   }
 ];
 
+type Seasons = {
+  text: string;
+  labels: string;
+  value: number;
+}
+
 type Props = {
   setYear: (value: number) => void;
   setSeason: (value: number) => void;
@@ -70,7 +77,7 @@ export type FormType = {
   year: number;
   years: Array<number>;
   season: number;
-  seasons: Array<object>;
+  seasons: Array<Seasons>;
 };
 
 const styles = {
@@ -147,16 +154,14 @@ const Home: NextPage<Props> = ({
     Router.push('/request/result');
   }
 
-  const label = styles.label;
-
   return (
     <div css={styles.container}>
       <FormProvider {...methods}>
         <form onSubmit={onSubmit} action="#">
           <div css={styles.margin}>
-            <Year years={years} thisYear={thisYear} style={label}/>
+            <Year years={years} thisYear={thisYear} style={styles.label}/>
           </div>
-          <Season />
+          <Season seasons={seasons} style={styles.label} thisSeason={thisSeasonValue}/>
           <button type="submit" onClick={moveResultPage}>
             {watch('year', thisYear)}年{convertSeason(watch('season', '1'))}放送のアニメを調べる
           </button>
@@ -164,22 +169,6 @@ const Home: NextPage<Props> = ({
       </FormProvider>
     </div>
   )
-}
-
-const Season = () => {
-  const { register } = useFormContext();
-  return (
-    <>
-      {
-        seasons.map(season => (
-          <label htmlFor={season.labels} css={styles.label} key={season.value}>
-            <input id={season.labels} type="radio" value={season.value} {...register("season", { required: true })} checked={season.value === thisSeasonValue } />
-            {season.text}
-          </label>
-        ))
-      }
-    </>
-  );
 }
 
 export default Home
