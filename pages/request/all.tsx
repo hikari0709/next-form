@@ -7,6 +7,10 @@ import Season from "../../components/request/InputSeason";
 
 import type { NextPage } from 'next';
 import { css } from '@emotion/react';
+import { rgba } from 'emotion-rgba';
+
+const shodow = '#68816d';
+const alpha = 0.3;
 
 const setDefaultSeason = (month: number) => {
   switch (month) {
@@ -80,34 +84,67 @@ export type FormType = {
   seasons: Array<Seasons>;
 };
 
+// コンポーネント自体にマージンをつけたくないけど一旦考えないでコーディングする
 const styles = {
   container: css`
     width: 375px;
+    height: 90vh;
     margin: 20px auto 0;
-    padding: 1.2rem;
-    background-color: #fff;
+    padding: 2.4rem 1.2rem;
+    background-color: #41c9b3;
+    text-align: center;
   `,
   button: css`
     display: block;
-    width: 80%;
-    margin: 0 auto;
+    width: 100%;
+    margin: auto;
     padding: 10px;
-    background-color: #00a022;
+    background-color: #2db696;
     border-radius: 2px;
     color: #fff;
-    font-size: 2rem;
+    font-size: 1.2rem;
     font-weight: bold;
     text-align: center;
+    box-shadow: 0 2px 3px ${rgba(shodow, 0.3)};
+  `,
+  inputRadio: css`
+    display: none;
+
+    &:checked ~ label {
+      background-color: #2db696;
+      color: #fff;
+    }
   `,
   label: css`
     display: block;
-    padding: 8px;
+    padding: 1.6rem 0.8rem;
     border-radius: 3px;
-    border: 1px solid #ccc;
+    background-color: #fff;
+    color: #41c9b3;
+    font-weight: bold;
     cursor: pointer;
   `,
-  margin: css`
-    margin-bottom: 16px;
+  yearList: css`
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 1.6rem;
+
+    li {
+      width: calc((100% - 0.4rem) / 2);
+      margin-bottom: 0.4rem;
+    }
+  `,
+  seasonList: css`
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 2.4rem;
+
+    li {
+      width: calc((100% - 0.4rem) / 2);
+      margin-bottom: 0.4rem;
+    }
   `,
 };
 
@@ -144,7 +181,6 @@ const Home: NextPage<Props> = ({
 
   const onSubmit = methods.handleSubmit(
     (data) => {
-      console.log(data);
       setYear(data.year);
       setSeason(data.season);
     }
@@ -158,11 +194,21 @@ const Home: NextPage<Props> = ({
     <div css={styles.container}>
       <FormProvider {...methods}>
         <form onSubmit={onSubmit} action="#">
-          <div css={styles.margin}>
-            <Year years={years} thisYear={thisYear} style={styles.label}/>
-          </div>
-          <Season seasons={seasons} style={styles.label} thisSeason={thisSeasonValue}/>
-          <button type="submit" onClick={moveResultPage}>
+          <Year
+            years={years}
+            thisYear={thisYear}
+            style={styles.label}
+            list={styles.yearList}
+            input={styles.inputRadio}
+          />
+          <Season
+            seasons={seasons}
+            labelStyle={styles.label}
+            list={styles.seasonList}
+            input={styles.inputRadio}
+            thisSeason={thisSeasonValue}
+          />
+          <button type="submit" onClick={moveResultPage} css={styles.button}>
             {watch('year', thisYear)}年{convertSeason(watch('season', '1'))}放送のアニメを調べる
           </button>
         </form>

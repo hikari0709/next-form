@@ -5,38 +5,30 @@ import type { NextPage } from 'next'
 import { css } from '@emotion/react'
 
 const styles = {
-  container: css`
+container: css`
     width: 375px;
     height: 90vh;
     margin: 20px auto 0;
-    padding: 1.2rem;
-    background-color: #fff;
-  `,
-  button: css`
-    display: block;
-    width: 80%;
-    margin: 0 auto;
-    padding: 10px;
-    background-color: #00a022;
-    border-radius: 2px;
-    color: #fff;
-    font-size: 2rem;
-    font-weight: bold;
+    padding: 2.4rem 1.2rem;
+    background-color: #41c9b3;
     text-align: center;
-  `,
-  label: css`
-    display: block;
-    padding: 8px;
-    border-radius: 3px;
-    border: 1px solid #ccc;
-    cursor: pointer;
-  `,
-  margin: css`
-    margin-bottom: 16px;
   `,
   list: css`
     height: 100%;
     overflow: scroll;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 1.6rem;
+
+    li {
+      width: calc((100% - 0.4rem) / 2);
+      margin-bottom: 0.4rem;
+      background-color: #fff;
+      padding: 0.8rem;
+      border-radius: 0.2rem;
+      word-break: break-all;
+    }
   `,
 };
 

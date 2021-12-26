@@ -1153,6 +1153,11 @@ emojis-list@^2.0.0:
   resolved "https://registry.yarnpkg.com/emojis-list/-/emojis-list-2.1.0.tgz#4daa4d9db00f9819880c79fa457ae5b09a1fd389"
   integrity sha1-TapNnbAPmBmIDHn6RXrlsJof04k=
 
+emotion-rgba@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/emotion-rgba/-/emotion-rgba-0.0.9.tgz#aae6f1ae04aa4acd1f9312767de09ae32f57f066"
+  integrity sha512-fSt51Lh4a1fppXY3nQrMUC00p1jIYMSaRRkUhPiOJ3s9oumae1tY41AJytRK9d4YmJDP9njJBndgdDn9j7CbsA==
+
 encoding@0.1.13:
   version "0.1.13"
   resolved "https://registry.yarnpkg.com/encoding/-/encoding-0.1.13.tgz#56574afdd791f54a8e9b2785c0582a2d26210fa9"

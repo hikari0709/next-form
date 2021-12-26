@@ -11,25 +11,37 @@ type Seasons = {
 type Props = {
   seasons: Array<Seasons>;
   thisSeason: number;
-  style: SerializedStyles;
+  labelStyle: SerializedStyles;
+  list: SerializedStyles;
+  input: SerializedStyles;
 }
 
 export default function Season ({
   seasons,
   thisSeason,
-  style,
+  labelStyle,
+  list,
+  input,
 }: Props) {
   const { register } = useFormContext();
   return (
-    <>
-      {
+    <ul css={list}>
+        {
         seasons.map(season => (
-          <label htmlFor={season.labels} css={style} key={season.value}>
-            <input id={season.labels} type="radio" value={season.value} {...register("season", { required: true })} checked={season.value === thisSeason } />
-            {season.text}
-          </label>
-        ))
-      }
-    </>
+          <li key={season.value}>
+            <input
+              id={season.labels}
+              type="radio"
+              value={season.value}
+              checked={season.value === thisSeason}
+              css={input}
+              {...register("season", { required: true })}
+            /><label htmlFor={season.labels} css={labelStyle}>
+              {season.text}
+            </label>
+          </li>
+          ))
+        }
+    </ul>
   );
 }

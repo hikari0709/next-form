@@ -6,24 +6,37 @@ type Props = {
   years: Array<number>;
   thisYear: number;
   style: SerializedStyles;
+  list: SerializedStyles;
+  input: SerializedStyles;
 }
 
 export default function Year({
   years,
   thisYear,
   style,
+  list,
+  input,
 }: Props) {
   const { register } = useFormContext();
 
   return (
-    <>
+    <ul css={list}>
       {
         years.map(value => (
-          <label css={style} key={value}>
-            <input type="radio" value={value} {...register("year", { required: true })} checked={value === thisYear} />{value}
+        <li key={value}>
+          <input
+
+            type="radio"
+            value={value}
+            checked={value === thisYear}
+            css={input}
+            {...register("year", { required: true })}
+          /><label css={style}>
+            {value}
           </label>
+        </li>
         ))
       }
-    </>
+    </ul>
   );
 }
