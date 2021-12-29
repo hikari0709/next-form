@@ -22,16 +22,16 @@ const styles = {
   `,
   button: css`
     display: block;
-    width: 80%;
-    margin: auto;
+    width: 100%;
     padding: 10px;
     background-color: #2db696;
     border-radius: 2px;
     color: #fff;
-    font-size: 2rem;
+    font-size: 1.4rem;
     font-weight: bold;
     text-align: center;
     box-shadow: 0 2px 3px ${rgba(shodow, 0.3)};
+    cursor: pointer;
   `,
   logoImage: css`
     display: block;

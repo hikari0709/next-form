@@ -12,36 +12,11 @@ import { rgba } from 'emotion-rgba';
 const shodow = '#68816d';
 const alpha = 0.3;
 
-const setDefaultSeason = (month: number) => {
-  switch (month) {
-    case 1:
-    case 2:
-    case 3:
-      return 1;
-      break;
-    case 4:
-    case 5:
-    case 6:
-      return 2;
-      break;
-    case 7:
-    case 8:
-    case 9:
-      return 3;
-      break;
-    case 10:
-    case 11:
-    case 12:
-      return 4;
-      break;
-  }
-}
-
 const date = new Date();
 const thisYear = date.getFullYear();
-const thisMonth = date.getMonth() + 1;
 const years = [thisYear + 1, thisYear, thisYear - 1, thisYear - 2];
-const thisSeasonValue = setDefaultSeason(thisMonth);
+
+const thisSeason = 4;
 
 const seasons = [
   {
@@ -73,6 +48,8 @@ type Seasons = {
 }
 
 type Props = {
+  year: number;
+  season: number;
   setYear: (value: number) => void;
   setSeason: (value: number) => void;
 }
@@ -83,6 +60,23 @@ export type FormType = {
   season: number;
   seasons: Array<Seasons>;
 };
+
+const convertSeason = (value: number) => {
+  switch (value) {
+    case 1:
+      return '春';
+      break;
+    case 2:
+      return '夏';
+      break;
+    case 3:
+      return '秋';
+      break;
+    case 4:
+      return '冬';
+      break;
+  }
+}
 
 // コンポーネント自体にマージンをつけたくないけど一旦考えないでコーディングする
 const styles = {
@@ -106,6 +100,7 @@ const styles = {
     font-weight: bold;
     text-align: center;
     box-shadow: 0 2px 3px ${rgba(shodow, 0.3)};
+    cursor: pointer;
   `,
   inputRadio: css`
     display: none;
@@ -128,7 +123,7 @@ const styles = {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    margin-bottom: 1.6rem;
+    margin-bottom: 1.2rem;
 
     li {
       width: calc((100% - 0.4rem) / 2);
@@ -139,7 +134,7 @@ const styles = {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    margin-bottom: 2.4rem;
+    margin-bottom: 1.8rem;
 
     li {
       width: calc((100% - 0.4rem) / 2);
@@ -149,12 +144,16 @@ const styles = {
 };
 
 const Home: NextPage<Props> = ({
+  year,
+  season,
   setYear,
   setSeason,
 }) => {
 
   const methods = useForm<FormType>({
     defaultValues: {
+      year: year,
+      season: season,
       years: years,
       seasons: seasons,
     },
@@ -162,25 +161,9 @@ const Home: NextPage<Props> = ({
 
   const { register, handleSubmit, watch } = useForm();
 
-  const convertSeason = (value: String) => {
-    switch (value) {
-      case '1':
-        return '春';
-        break;
-      case '2':
-        return '夏';
-        break;
-      case '3':
-        return '秋';
-        break;
-      case '4':
-        return '冬';
-        break;
-    }
-  }
-
   const onSubmit = methods.handleSubmit(
     (data) => {
+      console.log(data);
       setYear(data.year);
       setSeason(data.season);
     }
@@ -194,22 +177,42 @@ const Home: NextPage<Props> = ({
     <div css={styles.container}>
       <FormProvider {...methods}>
         <form onSubmit={onSubmit} action="#">
-          <Year
-            years={years}
-            thisYear={thisYear}
-            style={styles.label}
-            list={styles.yearList}
-            input={styles.inputRadio}
-          />
-          <Season
-            seasons={seasons}
-            labelStyle={styles.label}
-            list={styles.seasonList}
-            input={styles.inputRadio}
-            thisSeason={thisSeasonValue}
-          />
+          <ul css={styles.yearList}>
+            {
+              years.map(value => (
+                <li key={value}>
+                  <input
+                    id={String(value)}
+                    type="radio"
+                    value={value}
+                    css={styles.inputRadio}
+                    {...register("year", { required: true })}
+                  /><label htmlFor={String(value)} css={styles.label}>
+                    {value}
+                  </label>
+                </li>
+              ))
+            }
+          </ul>
+          <ul css={styles.seasonList}>
+            {
+              seasons.map(season => (
+                <li key={season.value}>
+                  <input
+                    id={season.labels}
+                    type="radio"
+                    value={season.value}
+                    css={styles.inputRadio}
+                    {...register("season", { required: true })}
+                  /><label htmlFor={season.labels} css={styles.label}>
+                    {season.text}
+                  </label>
+                </li>
+              ))
+            }
+          </ul>
           <button type="submit" onClick={moveResultPage} css={styles.button}>
-            {watch('year', thisYear)}年{convertSeason(watch('season', '1'))}放送のアニメを調べる
+            {watch('year', year)}年{watch('season', season)}放送のアニメを調べる
           </button>
         </form>
       </FormProvider>

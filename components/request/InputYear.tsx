@@ -25,11 +25,11 @@ export default function Year({
         years.map(value => (
         <li key={value}>
           <input
-
             type="radio"
             value={value}
             checked={value === thisYear}
             css={input}
+            // なんでこの書き方？ ref={}と何が違う？
             {...register("year", { required: true })}
           /><label css={style}>
             {value}

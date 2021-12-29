@@ -30,13 +30,12 @@ export default function Season ({
         seasons.map(season => (
           <li key={season.value}>
             <input
-              id={season.labels}
               type="radio"
               value={season.value}
               checked={season.value === thisSeason}
               css={input}
               {...register("season", { required: true })}
-            /><label htmlFor={season.labels} css={labelStyle}>
+            /><label css={labelStyle}>
               {season.text}
             </label>
           </li>

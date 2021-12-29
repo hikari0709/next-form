@@ -5,7 +5,7 @@ import type { NextPage } from 'next'
 import { css } from '@emotion/react'
 
 const styles = {
-container: css`
+  container: css`
     width: 375px;
     height: 90vh;
     margin: 20px auto 0;
