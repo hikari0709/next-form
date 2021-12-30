@@ -1,6 +1,7 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import Router from 'next/router'
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import axios from "axios";
 
 import Year from "../../components/request/InputYear";
 import Season from "../../components/request/InputSeason";
@@ -15,8 +16,6 @@ const alpha = 0.3;
 const date = new Date();
 const thisYear = date.getFullYear();
 const years = [thisYear + 1, thisYear, thisYear - 1, thisYear - 2];
-
-const thisSeason = 4;
 
 const seasons = [
   {
@@ -40,26 +39,6 @@ const seasons = [
     value: 4,
   }
 ];
-
-type Seasons = {
-  text: string;
-  labels: string;
-  value: number;
-}
-
-type Props = {
-  year: number;
-  season: number;
-  setYear: (value: number) => void;
-  setSeason: (value: number) => void;
-}
-
-export type FormType = {
-  year: number;
-  years: Array<number>;
-  season: number;
-  seasons: Array<Seasons>;
-};
 
 const convertSeason = (value: number) => {
   switch (value) {
@@ -143,31 +122,52 @@ const styles = {
   `,
 };
 
-const Home: NextPage<Props> = ({
-  year,
-  season,
-  setYear,
-  setSeason,
-}) => {
+type Response = {
+  title_short2: String;
+  twitter_account: String;
+  public_url: String;
+  title_short1: String
+  sex: Number;
+  twitter_hash_tag: String;
+  id: Number;
+  sequel: Number;
+  created_at: String;
+  cours_id: Number;
+  title: String;
+  title_short3: String;
+  updated_at: String;
+  product_companies: String;
+}
 
-  const methods = useForm<FormType>({
-    defaultValues: {
-      year: year,
-      season: season,
-      years: years,
-      seasons: seasons,
-    },
-  });
+const Home: NextPage = () => {
+  const date = new Date();
+  const { register, handleSubmit, watch, control } = useForm();
+  const [result, setResult] = useState<Response[]>([]);
 
-  const { register, handleSubmit, watch } = useForm();
+  const selectedSeason = watch('season', 1);
+  const selectedYear = watch('year', date.getFullYear());
 
-  const onSubmit = methods.handleSubmit(
+  const onSubmit = handleSubmit(
     (data) => {
-      console.log(data);
-      setYear(data.year);
-      setSeason(data.season);
+      axios
+      .get(`http://api.moemoe.tokyo/anime/v1/master/${data.year}/${data.season}`)
+      .then(res => {
+        setResult(
+          res.data.map((d: Response) => {
+            return {
+              url: d.public_url,
+              title: d.title,
+              company: d.product_companies,
+            }
+          })
+        );
+      }).catch(err => alert(err));
     }
   );
+
+  useEffect(() => {
+    console.log(result)
+  }, [result])
 
   const moveResultPage = () => {
     Router.push('/request/result');
@@ -175,47 +175,47 @@ const Home: NextPage<Props> = ({
 
   return (
     <div css={styles.container}>
-      <FormProvider {...methods}>
-        <form onSubmit={onSubmit} action="#">
-          <ul css={styles.yearList}>
-            {
-              years.map(value => (
-                <li key={value}>
-                  <input
-                    id={String(value)}
-                    type="radio"
-                    value={value}
-                    css={styles.inputRadio}
-                    {...register("year", { required: true })}
-                  /><label htmlFor={String(value)} css={styles.label}>
-                    {value}
-                  </label>
-                </li>
-              ))
-            }
-          </ul>
-          <ul css={styles.seasonList}>
-            {
-              seasons.map(season => (
-                <li key={season.value}>
-                  <input
-                    id={season.labels}
-                    type="radio"
-                    value={season.value}
-                    css={styles.inputRadio}
-                    {...register("season", { required: true })}
-                  /><label htmlFor={season.labels} css={styles.label}>
-                    {season.text}
-                  </label>
-                </li>
-              ))
-            }
-          </ul>
-          <button type="submit" onClick={moveResultPage} css={styles.button}>
-            {watch('year', year)}年{watch('season', season)}放送のアニメを調べる
-          </button>
-        </form>
-      </FormProvider>
+      <form onSubmit={onSubmit} action="#">
+        <ul css={styles.yearList}>
+          {
+            years.map(value => (
+              <li key={value}>
+                <input
+                  id={String(value)}
+                  type="radio"
+                  value={value}
+                  css={styles.inputRadio}
+                  defaultChecked={selectedYear === value}
+                  {...register("year", { required: true })}
+                /><label htmlFor={String(value)} css={styles.label}>
+                  {value}
+                </label>
+              </li>
+            ))
+          }
+        </ul>
+        <ul css={styles.seasonList}>
+          {
+            seasons.map(season => (
+              <li key={season.value}>
+                <input
+                  id={season.labels}
+                  type="radio"
+                  value={season.value}
+                  css={styles.inputRadio}
+                  defaultChecked={selectedSeason === season.value}
+                  {...register("season", { required: true })}
+                /><label htmlFor={season.labels} css={styles.label}>
+                  {season.text}
+                </label>
+              </li>
+            ))
+          }
+        </ul>
+        <button type="submit" css={styles.button}>
+          {selectedYear}年{selectedSeason}放送のアニメを調べる
+        </button>
+      </form>
     </div>
   )
 }
