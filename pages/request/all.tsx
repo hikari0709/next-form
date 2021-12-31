@@ -10,6 +10,8 @@ import type { NextPage } from 'next';
 import { css } from '@emotion/react';
 import { rgba } from 'emotion-rgba';
 
+import { useResult } from '../../hooks/ResultProvider';
+
 const shodow = '#68816d';
 const alpha = 0.3;
 
@@ -141,8 +143,8 @@ type Response = {
 
 const Home: NextPage = () => {
   const date = new Date();
-  const { register, handleSubmit, watch, control } = useForm();
-  const [result, setResult] = useState<Response[]>([]);
+  const { register, handleSubmit, watch } = useForm();
+  const { result, setResult } = useResult();
 
   const selectedSeason = watch('season', 1);
   const selectedYear = watch('year', date.getFullYear());

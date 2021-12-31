@@ -18,7 +18,7 @@ type Response = {
 }
 
 
-const ResultContext = createContext<{
+export const ResultContext = createContext<{
   result: Array<Response>;
   setResult: Dispatch<SetStateAction<Array<Response>>>
 }>({
@@ -32,15 +32,17 @@ type Props = {
   children: ReactNode;
 }
 
-export const YearProvider:VFC<Props> = ({children}) => {
-  const [result, setResult] = useState([]);
+const ResultProvider:VFC<Props> = ({children}) => {
+  const [result, setResult] = useState<Response[]>([]);
 
   return (
-    <ResultContext.Provider value={{result, setResult}}>
+    <ResultContext.Provider value={{ result, setResult }}>
       {children}
     </ResultContext.Provider>
   );
 };
 
 
-export const useResult = () => useContext(ResultContext)
+const useResult = () => useContext(ResultContext);
+
+export { useResult, ResultProvider }

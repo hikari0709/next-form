@@ -1,14 +1,9 @@
+/* eslint-disable react/jsx-no-undef */
 import '../styles/globals.scss';
 import type { AppProps } from 'next/app';
 import React from 'react'
 import { FormProvider, useForm } from 'react-hook-form';
-import { useResult } from '../hooks/ResultProvider';
-
-type Seasons = {
-  text: string;
-  labels: string;
-  value: number;
-}
+import { ResultContext, useResult } from '../hooks/ResultProvider';
 
 export type FormType = {
   year: number;
@@ -18,9 +13,10 @@ export type FormType = {
 };
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
-  const { result } = useResult();
   const date = new Date();
   const thisMonth = date.getMonth() + 1;
+
+  const { result, setResult } = useResult();
 
   const setDefaultSeason = (value: number) => {
     switch (value) {
@@ -56,9 +52,11 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 
   return (
     <FormProvider {...methods}>
-      <Component
-        {...pageProps}
-      />
+      <ResultContext.Provider>
+        <Component
+          {...pageProps}
+        />
+      </ResultContext.Provider>
     </FormProvider>
   );
 }
