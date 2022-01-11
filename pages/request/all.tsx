@@ -168,7 +168,7 @@ const Home: NextPage = () => {
   );
 
   useEffect(() => {
-    console.log(result)
+    console.log(result);
   }, [result])
 
   const moveResultPage = () => {
