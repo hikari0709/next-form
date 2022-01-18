@@ -154,6 +154,13 @@ const Home: NextPage = () => {
       axios
       .get(`http://api.moemoe.tokyo/anime/v1/master/${data.year}/${data.season}`)
       .then(res => {
+        const result2 = res.data.map((d: Response) => {
+          return {
+            url: d.public_url,
+            title: d.title,
+            company: d.product_companies,
+          }
+        });
         setResult(
           res.data.map((d: Response) => {
             return {
@@ -163,12 +170,15 @@ const Home: NextPage = () => {
             }
           })
         );
+        setResult(result2);
+        console.log(result2);
+        console.log(result);
       }).catch(err => alert(err));
     }
   );
 
   useEffect(() => {
-    console.log(result);
+    console.log('resultが変更された');
   }, [result])
 
   const moveResultPage = () => {
