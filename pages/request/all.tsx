@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useContext, useState} from 'react'
 import Router from 'next/router'
 import { useForm } from "react-hook-form";
 import axios from "axios";
@@ -10,7 +10,7 @@ import type { NextPage } from 'next';
 import { css } from '@emotion/react';
 import { rgba } from 'emotion-rgba';
 
-import { useResult } from '../../hooks/ResultProvider';
+import { ResultContext } from '../../hooks/ResultProvider';
 
 const shodow = '#68816d';
 const alpha = 0.3;
@@ -125,26 +125,16 @@ const styles = {
 };
 
 type Response = {
-  title_short2: String;
-  twitter_account: String;
   public_url: String;
-  title_short1: String
-  sex: Number;
-  twitter_hash_tag: String;
-  id: Number;
-  sequel: Number;
-  created_at: String;
-  cours_id: Number;
   title: String;
-  title_short3: String;
-  updated_at: String;
   product_companies: String;
 }
 
 const Home: NextPage = () => {
   const date = new Date();
   const { register, handleSubmit, watch } = useForm();
-  const { result, setResult } = useResult();
+  const { result, setResult } = useContext(ResultContext);
+  const [ response, setResponse ] = useState<Response[]>([]);
 
   const selectedSeason = watch('season', 1);
   const selectedYear = watch('year', date.getFullYear());
@@ -152,34 +142,28 @@ const Home: NextPage = () => {
   const onSubmit = handleSubmit(
     (data) => {
       axios
-      .get(`http://api.moemoe.tokyo/anime/v1/master/${data.year}/${data.season}`)
-      .then(res => {
-        const result2 = res.data.map((d: Response) => {
-          return {
-            url: d.public_url,
-            title: d.title,
-            company: d.product_companies,
-          }
-        });
-        setResult(
-          res.data.map((d: Response) => {
-            return {
-              url: d.public_url,
-              title: d.title,
-              company: d.product_companies,
-            }
-          })
-        );
-        setResult(result2);
-        console.log(result2);
-        console.log(result);
+        .get(`http://api.moemoe.tokyo/anime/v1/master/${data.year}/${data.season}`)
+        .then(res => {
+          setResponse(
+            res.data.map((d: Response) => {
+              return {
+                url: d.public_url,
+                title: d.title,
+                company: d.product_companies,
+              }
+            })
+          );
+
+          setResult(response);
+          console.log(result);
+          console.log(response);
+
       }).catch(err => alert(err));
     }
   );
 
   useEffect(() => {
-    console.log('resultが変更された');
-  }, [result])
+  }, [response])
 
   const moveResultPage = () => {
     Router.push('/request/result');
