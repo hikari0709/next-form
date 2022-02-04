@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react'
 
 import type { NextPage } from 'next';
 import { css } from '@emotion/react';
 
-import { useResult } from '../../hooks/ResultProvider';
+import { ResultContext } from '../../hooks/ResultProvider';
 
 const styles = {
   container: css`
@@ -34,8 +34,7 @@ const styles = {
 };
 
 const Home: NextPage = () => {
-  const { result, setResult } = useResult();
-  console.log(result);
+  const { result } = useContext(ResultContext);
 
   return (
     <div css={styles.container}>

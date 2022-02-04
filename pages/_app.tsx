@@ -3,7 +3,7 @@ import '../styles/globals.scss';
 import type { AppProps } from 'next/app';
 import React from 'react'
 import { FormProvider, useForm } from 'react-hook-form';
-import { ResultContext } from '../hooks/ResultProvider';
+import { ResultProvider } from '../hooks/ResultProvider';
 
 export type FormType = {
   year: number;
@@ -50,11 +50,11 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 
   return (
     <FormProvider {...methods}>
-      <ResultContext.Provider value={{ result: [], setResult: () => {} }}>
+      <ResultProvider>
         <Component
           {...pageProps}
         />
-      </ResultContext.Provider>
+      </ResultProvider>
     </FormProvider>
   );
 }

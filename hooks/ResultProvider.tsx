@@ -6,7 +6,6 @@ type Response = {
   product_companies: String;
 }
 
-
 const ResultContext = createContext<{
   result: Array<Response>;
   setResult: Dispatch<SetStateAction<Array<Response>>>
@@ -25,10 +24,12 @@ const ResultProvider:VFC<Props> = ({children}) => {
   const [result, setResult] = useState<Response[]>([]);
 
   return (
-    <ResultContext.Provider value={{ result: [], setResult: () => {} }}>
+    <ResultContext.Provider value={{ result, setResult }}>
       {children}
     </ResultContext.Provider>
   );
 };
 
 export { ResultContext, ResultProvider }
+
+//

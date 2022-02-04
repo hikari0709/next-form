@@ -1,10 +1,7 @@
-import React, {useEffect, useContext, useState} from 'react'
+import React, {useEffect, useContext, useState, useRef} from 'react'
 import Router from 'next/router'
 import { useForm } from "react-hook-form";
 import axios from "axios";
-
-import Year from "../../components/request/InputYear";
-import Season from "../../components/request/InputSeason";
 
 import type { NextPage } from 'next';
 import { css } from '@emotion/react';
@@ -13,7 +10,6 @@ import { rgba } from 'emotion-rgba';
 import { ResultContext } from '../../hooks/ResultProvider';
 
 const shodow = '#68816d';
-const alpha = 0.3;
 
 const date = new Date();
 const thisYear = date.getFullYear();
@@ -134,17 +130,22 @@ const Home: NextPage = () => {
   const date = new Date();
   const { register, handleSubmit, watch } = useForm();
   const { result, setResult } = useContext(ResultContext);
-  const [ response, setResponse ] = useState<Response[]>([]);
+  const [response, setResponse] = useState<Response[]>([]);
+  const isFirstRender = useRef(true);
 
   const selectedSeason = watch('season', 1);
   const selectedYear = watch('year', date.getFullYear());
+
+  const moveResultPage = () => {
+    Router.push('/request/result');
+  }
 
   const onSubmit = handleSubmit(
     (data) => {
       axios
         .get(`http://api.moemoe.tokyo/anime/v1/master/${data.year}/${data.season}`)
         .then(res => {
-          setResponse(
+          setResult(
             res.data.map((d: Response) => {
               return {
                 url: d.public_url,
@@ -153,21 +154,21 @@ const Home: NextPage = () => {
               }
             })
           );
-
-          setResult(response);
-          console.log(result);
-          console.log(response);
-
-      }).catch(err => alert(err));
+        }).catch(err => alert(err));
     }
   );
 
   useEffect(() => {
-  }, [response])
+    isFirstRender.current = false
+  }, []);
 
-  const moveResultPage = () => {
-    Router.push('/request/result');
-  }
+  useEffect(() => {
+    if(isFirstRender.current) {
+      moveResultPage();
+    } else {
+      isFirstRender.current = true;
+    }
+  }, [result]);
 
   return (
     <div css={styles.container}>
