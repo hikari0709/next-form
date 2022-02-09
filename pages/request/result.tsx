@@ -8,8 +8,8 @@ import { ResultContext } from '../../hooks/ResultProvider';
 const styles = {
   container: css`
     width: 375px;
-    height: 90vh;
-    margin: 20px auto 0;
+    height: 100vh;
+    margin: auto;
     padding: 2.4rem 1.2rem;
     background-color: #41c9b3;
     text-align: center;

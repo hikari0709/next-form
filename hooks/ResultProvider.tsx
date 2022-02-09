@@ -1,4 +1,4 @@
-import { createContext, useState, useContext, VFC, ReactNode, SetStateAction, Dispatch } from 'react';
+import { createContext, useState, VFC, ReactNode, SetStateAction, Dispatch } from 'react';
 
 type Response = {
   public_url: String;

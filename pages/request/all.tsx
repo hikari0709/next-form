@@ -2,17 +2,16 @@ import React, {useEffect, useContext, useState, useRef} from 'react'
 import Router from 'next/router'
 import { useForm } from "react-hook-form";
 import axios from "axios";
-
 import type { NextPage } from 'next';
 import { css } from '@emotion/react';
 import { rgba } from 'emotion-rgba';
-
 import { ResultContext } from '../../hooks/ResultProvider';
 
 const shodow = '#68816d';
 
 const date = new Date();
 const thisYear = date.getFullYear();
+// TODO: 2年よりさらに前も選択できるようにする「もっと見る」ボタンを設置アコーディオンとかで
 const years = [thisYear + 1, thisYear, thisYear - 1, thisYear - 2];
 
 const seasons = [
@@ -38,29 +37,11 @@ const seasons = [
   }
 ];
 
-const convertSeason = (value: number) => {
-  switch (value) {
-    case 1:
-      return '春';
-      break;
-    case 2:
-      return '夏';
-      break;
-    case 3:
-      return '秋';
-      break;
-    case 4:
-      return '冬';
-      break;
-  }
-}
-
-// コンポーネント自体にマージンをつけたくないけど一旦考えないでコーディングする
 const styles = {
   container: css`
     width: 375px;
-    height: 90vh;
-    margin: 20px auto 0;
+    height: 100vh;
+    margin: auto;
     padding: 2.4rem 1.2rem;
     background-color: #41c9b3;
     text-align: center;
@@ -120,6 +101,10 @@ const styles = {
   `,
 };
 
+const modal = (status : boolean) => css`
+  display: ${ status ? 'block': 'none' };
+`
+
 type Response = {
   public_url: String;
   title: String;
@@ -130,14 +115,16 @@ const Home: NextPage = () => {
   const date = new Date();
   const { register, handleSubmit, watch } = useForm();
   const { result, setResult } = useContext(ResultContext);
-  const [response, setResponse] = useState<Response[]>([]);
   const isFirstRender = useRef(true);
+  const isShowModal = useRef(false);
 
   const selectedSeason = watch('season', 1);
   const selectedYear = watch('year', date.getFullYear());
 
   const moveResultPage = () => {
-    Router.push('/request/result');
+    if (result.length) {
+      Router.push('/request/result');
+    }
   }
 
   const onSubmit = handleSubmit(
@@ -158,20 +145,45 @@ const Home: NextPage = () => {
     }
   );
 
+  // 初期ローディング時に実行
   useEffect(() => {
     isFirstRender.current = false
   }, []);
 
+  // statusの更新されるタイミングが変
+  // モーダル用に準備したコンテンツは表示されるが一足遅く表示される→ステータスの更新のタイミングを知る
+  // 項目を選択して他の動作（クリックなど）をすると表示される タイミングが遅い
   useEffect(() => {
     if(isFirstRender.current) {
       moveResultPage();
+      isShowModal.current = true;
     } else {
       isFirstRender.current = true;
     }
   }, [result]);
 
+  const convertSeasonValue = (value: string) => {
+    switch (value) {
+      case '1':
+        return '春';
+        break;
+      case '2':
+        return '夏';
+        break;
+      case '3':
+        return '秋';
+        break;
+      case '4':
+        return '冬';
+        break;
+    }
+  }
+
   return (
     <div css={styles.container}>
+      <div css={ modal(isShowModal.current) }>
+        <p>アニメが見つかりませんでした。条件を変えて検索してください。</p>
+      </div>
       <form onSubmit={onSubmit} action="#">
         <ul css={styles.yearList}>
           {
@@ -210,7 +222,7 @@ const Home: NextPage = () => {
           }
         </ul>
         <button type="submit" css={styles.button}>
-          {selectedYear}年{selectedSeason}放送のアニメを調べる
+          {selectedYear}年{convertSeasonValue(selectedSeason)}放送のアニメを調べる
         </button>
       </form>
     </div>
