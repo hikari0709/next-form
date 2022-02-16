@@ -103,8 +103,30 @@ const styles = {
   modal: (showModal: boolean) => {
     return css`
       display: ${showModal ? 'block' : 'none'};
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      text-align: center;
+      background-color: rgba(0,0,0, 0.8);
     `;
   },
+  modalInner: css`
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+  `,
+  modalText: css`
+    color: #fff;
+    font-weight: bold;
+  `,
+  modalBtn: css`
+    color: #fff;
+    font-weight: bold;
+  `,
 };
 
 type Response = {
@@ -164,6 +186,12 @@ const Home: NextPage = () => {
     }
   }, [result]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setShowModal(false);
+    } ,2000);
+  }, [showModal]);
+
   const convertSeasonValue = (value: string) => {
     switch (value) {
       case '1':
@@ -184,7 +212,9 @@ const Home: NextPage = () => {
   return (
     <div css={styles.container}>
       <div css={ styles.modal(showModal) }>
-        <p>アニメが見つかりませんでした。条件を変えて検索してください。</p>
+        <div css={ styles.modalInner }>
+          <p css={styles.modalText}>アニメが見つかりませんでした。<br />条件を変えて検索してください。</p>
+        </div>
       </div>
       <form onSubmit={onSubmit} action="#">
         <ul css={styles.yearList}>
