@@ -8,6 +8,7 @@ import { rgba } from 'emotion-rgba';
 import { ResultContext } from '../../hooks/ResultProvider';
 
 const shodow = '#68816d';
+let showModal = false;
 
 const date = new Date();
 const thisYear = date.getFullYear();
@@ -99,11 +100,12 @@ const styles = {
       margin-bottom: 0.4rem;
     }
   `,
+  modal: (showModal: boolean) => {
+    return css`
+      display: ${showModal ? 'block' : 'none'};
+    `;
+  },
 };
-
-const modal = (status : boolean) => css`
-  display: ${ status ? 'block': 'none' };
-`
 
 type Response = {
   public_url: String;
@@ -115,15 +117,18 @@ const Home: NextPage = () => {
   const date = new Date();
   const { register, handleSubmit, watch } = useForm();
   const { result, setResult } = useContext(ResultContext);
+  const [ showModal, setShowModal ] = useState(false);
   const isFirstRender = useRef(true);
-  const isShowModal = useRef(false);
 
   const selectedSeason = watch('season', 1);
   const selectedYear = watch('year', date.getFullYear());
 
   const moveResultPage = () => {
     if (result.length) {
+      setShowModal(false);
       Router.push('/request/result');
+    } else {
+      setShowModal(true);
     }
   }
 
@@ -147,18 +152,15 @@ const Home: NextPage = () => {
 
   // 初期ローディング時に実行
   useEffect(() => {
-    isFirstRender.current = false
+    // console.log('初回ロード');
   }, []);
 
-  // statusの更新されるタイミングが変
-  // モーダル用に準備したコンテンツは表示されるが一足遅く表示される→ステータスの更新のタイミングを知る
-  // 項目を選択して他の動作（クリックなど）をすると表示される タイミングが遅い
   useEffect(() => {
-    if(isFirstRender.current) {
-      moveResultPage();
-      isShowModal.current = true;
+    // console.log(isFirstRender.current);
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
     } else {
-      isFirstRender.current = true;
+      moveResultPage();
     }
   }, [result]);
 
@@ -181,7 +183,7 @@ const Home: NextPage = () => {
 
   return (
     <div css={styles.container}>
-      <div css={ modal(isShowModal.current) }>
+      <div css={ styles.modal(showModal) }>
         <p>アニメが見つかりませんでした。条件を変えて検索してください。</p>
       </div>
       <form onSubmit={onSubmit} action="#">
