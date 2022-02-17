@@ -7,9 +7,6 @@ import { css } from '@emotion/react';
 import { rgba } from 'emotion-rgba';
 import { ResultContext } from '../../hooks/ResultProvider';
 
-const shodow = '#68816d';
-let showModal = false;
-
 const date = new Date();
 const thisYear = date.getFullYear();
 // TODO: 2年よりさらに前も選択できるようにする「もっと見る」ボタンを設置アコーディオンとかで
@@ -58,7 +55,7 @@ const styles = {
     font-size: 1.2rem;
     font-weight: bold;
     text-align: center;
-    box-shadow: 0 2px 3px ${rgba(shodow, 0.3)};
+    box-shadow: 0 2px 3px ${rgba('#68816d', 0.3)};
     cursor: pointer;
   `,
   inputRadio: css`
