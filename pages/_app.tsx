@@ -9,7 +9,6 @@ export type FormType = {
   year: number;
   years: Array<number>;
   season: number;
-  seasons: Array<Seasons>;
 };
 
 const MyApp = ({ Component, pageProps }: AppProps) => {

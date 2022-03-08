@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState, useCallback } from 'react'
 
 import type { NextPage } from 'next';
 import { css } from '@emotion/react';
@@ -33,37 +33,53 @@ const styles = {
       word-break: break-all;
     }
   `,
-  button: css`
+  button: (scrollStatus: boolean) => {
+    return css`
     position: fixed;
     bottom: 50px;
     right: 15px;
-    display: flex;
+    display: ${scrollStatus ? 'flex' : 'none' };
     align-items: center;
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     margin: auto;
     padding: 10px;
     background-color: #2db696;
     border-radius: 50%;
     color: #fff;
-    font-size: 1.1rem;
-    line-height: 1.2;
+    font-size: 1rem;
+    line-height: 1.1;
     font-weight: bold;
     text-align: center;
     box-shadow: 0 2px 3px ${rgba('#68816d', 0.3)};
     cursor: pointer;
-  `,
+  `
+  },
 };
 
 const Home: NextPage = () => {
   let { result } = useContext(ResultContext);
 
-  useEffect(() => {
-    if (!result.length) {
-      //result = JSON.parse(localStorage.getItem('result'));
-    }
-  }, []);
+  const [scrollStatus, setScrollStatus] = useState(true);
+
+  // scrollイベントつけたいけどなぜか動かない…
+  // const [scrollY, setScrollY] = useState(0);
+
+  // function logit() {
+  //   setScrollY(window.pageYOffset);
+  //   console.log(new Date().getTime());
+  // }
+
+  // useEffect(() => {
+  //   function watchScroll() {
+  //     window.addEventListener("scroll", logit);
+  //   }
+  //   watchScroll();
+  //   return () => {
+  //     window.removeEventListener("scroll", logit);
+  //   };
+  // });
 
   return (
     <div css={styles.container}>
@@ -72,9 +88,9 @@ const Home: NextPage = () => {
           <li key={index}>{value.title}</li>
         ))}
       </ul>
-      <div css={ styles.button }>
+      <div>
         <Link href="/request/all" passHref>
-          <a css={styles.button}>検索条件を変える</a>
+          <a css={styles.button(scrollStatus)}>条件を変えて検索</a>
         </Link>
       </div>
     </div>
